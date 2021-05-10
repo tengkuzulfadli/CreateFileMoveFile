@@ -1,0 +1,73 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+
+namespace CreateFileMoveFile
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            //First define 2 files
+            string sfileName = @"mytest.txt";
+            string tfileName = @"mynewtest.txt";
+
+            //Check if first file name exists or not, if exist, then delete
+            if (File.Exists(sfileName))
+            {
+                File.Delete(sfileName);
+            }
+
+            //Check if second file name exists or not, if exist, then delete
+            if (File.Exists(tfileName))
+            {
+                File.Delete(tfileName);
+            }
+
+            //Then, create some data insde the first file
+            using (StreamWriter fileStr = File.CreateText(sfileName))
+            {
+                fileStr.WriteLine("This is some text");
+                fileStr.WriteLine("This is another data add on");
+            }
+
+            //Create a method to read some data inside the first file
+            using (StreamReader sr = File.OpenText(sfileName))
+            {
+                string s = "";
+                Console.WriteLine("Here is the content inside the first file {0} : ", sfileName);
+
+                //We check condition of s using While loop if the first file is not empty, if it's TRUE, then empty string returned
+                while ((s = sr.ReadLine()) != null)
+                {
+                    Console.WriteLine(s);
+                }
+            }
+
+            //After that, we move all the data inside The First File to The Second File
+            //by using System.IO.File.Move(firstfile, secondfile) method
+            System.IO.File.Move(sfileName,tfileName);
+
+            //This is a message to let the user know that the data has been transferred to the second file
+            Console.WriteLine("The file {0} successfully moved to the name {1} in the same directory.", sfileName, tfileName);
+
+            //To check whether it has been transferred or not, we use Streamreader method again
+            using (StreamReader sr = File.OpenText(tfileName))
+            {
+                //We check again whether the data exists or not inside the second file
+                string s = "";
+                Console.WriteLine("Here is the content of the file {0} : ", tfileName);
+
+                while ((s = sr.ReadLine()) != null)
+                {
+                    Console.WriteLine(s);
+                }
+            }
+
+            Console.ReadKey();
+        }
+    }
+}
